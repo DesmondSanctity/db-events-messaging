@@ -1,0 +1,29 @@
+{
+  "name": "db-events-messaging",
+  "version": "1.0.0",
+  "description": "A demo to show how to use database events from MongoDB to call twilio functions to perfom a task in response to the event.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DesmondSanctity/db-events-messaging.git"
+  },
+  "keywords": [
+    "events",
+    "twilio",
+    "serverless-functions",
+    "mongodb",
+    "event-driven-architecture",
+    "database"
+  ],
+  "author": "Desmond Obisi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DesmondSanctity/db-events-messaging/issues"
+  },
+  "homepage": "https://github.com/DesmondSanctity/db-events-messaging#readme"
+}
