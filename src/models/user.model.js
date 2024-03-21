@@ -16,6 +16,10 @@ const Users = db.define(
    type: DataTypes.STRING,
    allowNull: true,
   },
+  phoneNumber: {
+   type: DataTypes.STRING,
+   allowNull: true,
+  },
   password: {
    type: DataTypes.STRING,
    allowNull: true,
@@ -32,14 +36,14 @@ const Users = db.define(
   isVerified: {
    type: DataTypes.BOOLEAN,
    allowNull: true,
-  }
+  },
  },
 
  {
   freezeTableName: true,
   scopes: {
    withoutSensitiveInfo: {
-    attributes: { exclude: ['password'] },
+    attributes: { exclude: ['password', 'phoneNumber'] },
    },
   },
  }

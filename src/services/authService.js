@@ -6,7 +6,7 @@ import { AppError } from '../utils/response-handler.js';
 
 export const signupUser = async (req, res) => {
  try {
-  const { email, fullName, password, userType } = req.body;
+  const { email, phoneNumber, fullName, password, userType } = req.body;
 
   // Use async/await instead of promises
   const existEmail = await Users.findOne({ where: { email: email } });
@@ -18,6 +18,7 @@ export const signupUser = async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await Users.create({
    email: email,
+   phoneNumber: phoneNumber,
    password: hashedPassword,
    fullName: fullName,
    userType: userType || 'reader',

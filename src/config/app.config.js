@@ -13,6 +13,8 @@ const dbName = process.env.DB_NAME;
 const dbPassword = process.env.DB_PASSWORD || "";
 const dbUsername = process.env.DB_USERNAME;
 const dbHost = process.env.DB_HOST;
+const accountSid= process.env.TWILIO_ACCOUNT_SID
+const authToken= process.env.TWILIO_AUTH_TOKEN
 
 export {
  baseURL,
@@ -23,4 +25,6 @@ export {
  dbPassword,
  dbUsername,
  dbHost,
+ accountSid,
+ authToken,
 };
