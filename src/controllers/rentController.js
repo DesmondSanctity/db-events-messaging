@@ -1,10 +1,30 @@
 import {
+ createRent,
  deleteRent,
  getRent,
  getRents,
  updateRent,
 } from '../services/rentService.js';
 import { AppResponse } from '../utils/response-handler.js';
+
+export const create = async (req, res) => {
+ try {
+  const rent = await createRent(req, res);
+
+  if (rent)
+   new AppResponse(
+    'success',
+    'Rent record created successfully',
+    { rent },
+    200
+   ).send(res);
+ } catch (error) {
+  res.status(400).json({
+   status: error.status,
+   message: error.message,
+  });
+ }
+};
 
 export const getAll = async (req, res) => {
  try {

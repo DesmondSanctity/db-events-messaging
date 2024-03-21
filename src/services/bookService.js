@@ -2,6 +2,38 @@ import { Books } from '../models/index.js';
 import { getPagination } from '../utils/paginate-query.js';
 import { AppError } from '../utils/response-handler.js';
 
+
+export const createBook = async (req, res) => {
+ const {
+  title,
+  isbnNumber,
+  author,
+  category,
+  coverImageURL,
+ } = req.body;
+ 
+ try {
+  const book = await Books.create({
+   title,
+   isbnNumber,
+   author,
+   category,
+   coverImageURL
+  });
+
+  if (book) {
+   return book;
+  } else {
+   throw new AppError('failed', 'Failed to create book', 400);
+  }
+ } catch (error) {
+  res.status(400).json({
+   status: error.status,
+   message: error.message,
+  });
+ }
+};
+
 export const getBooks = async (req, res, next) => {
  try {
   const results = getPagination(Books, {

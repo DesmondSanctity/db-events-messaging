@@ -10,10 +10,9 @@ const port = process.env.APP_PORT;
 const jwtSecret = process.env.JWT_SECRET;
 const jwtExpires = process.env.JWT_EXPIRES;
 const dbName = process.env.DB_NAME;
-const dbPassword = process.env.DB_PASSWORD;
+const dbPassword = process.env.DB_PASSWORD || "";
 const dbUsername = process.env.DB_USERNAME;
 const dbHost = process.env.DB_HOST;
-const dbEndpointId = process.env.DB_ENDPOINTID;
 
 export {
  baseURL,
@@ -24,5 +23,4 @@ export {
  dbPassword,
  dbUsername,
  dbHost,
- dbEndpointId,
 };

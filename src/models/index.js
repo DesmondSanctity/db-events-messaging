@@ -17,37 +17,37 @@ Books.belongsTo(Users, {
 });
 
 // Rents and Books Association
-Rents.hasMany(Books, {
- foreignKey: 'rentId',
+Books.hasOne(Rents, {
+ foreignKey: 'bookId',
  onDelete: 'cascade',
 });
-Books.belongsTo(Rents, {
- foreignKey: 'rentId',
+Rents.belongsTo(Books, {
+ foreignKey: 'bookId',
  onDelete: 'cascade',
 });
 
 // Users and Rents Association
-Users.belongsTo(Rents, {
+Rents.belongsTo(Users, {
   as: "borrower",
   foreignKey: "borrowedBy",
   onDelete: "SET NULL",
 });
 
-Users.belongsTo(Rents, {
+Rents.belongsTo(Users, {
   as: "renter",
-  foreignKey: "rentedBy",
+  foreignKey: "ownedBy",
   onDelete: "SET NULL",
 });
 
-Rents.hasMany(Users, {
+Users.hasMany(Rents, {
   as: "borrowingUser",
   foreignKey: "borrowedBy",
   onDelete: "SET NULL",
 });
 
-Rents.hasMany(Users, {
-  as: "rentingUser",
-  foreignKey: "rentedBy",
+Users.hasMany(Rents, {
+  as: "OwnerUser",
+  foreignKey: "ownedBy",
   onDelete: "SET NULL",
 });
 

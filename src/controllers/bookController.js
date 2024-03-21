@@ -1,10 +1,30 @@
 import {
+ createBook,
  deleteBook,
  getBook,
  getBooks,
  updateBook,
 } from '../services/bookService.js';
 import { AppResponse } from '../utils/response-handler.js';
+
+export const create = async (req, res) => {
+ try {
+  const book = await createBook(req, res);
+
+  if (book)
+   new AppResponse(
+    'success',
+    'Book record created successfully',
+    { book },
+    200
+   ).send(res);
+ } catch (error) {
+  res.status(400).json({
+   status: error.status,
+   message: error.message,
+  });
+ }
+};
 
 export const getAll = async (req, res) => {
  try {
