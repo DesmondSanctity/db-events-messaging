@@ -35,7 +35,6 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.9.2",
     "nodemon": "^3.1.0",
-    "sequelize": "^6.37.1",
-    "twilio": "^5.0.1"
+    "sequelize": "^6.37.1"
   }
 }
