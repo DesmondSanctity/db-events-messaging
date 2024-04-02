@@ -32,19 +32,4 @@ const RentSchema = new mongoose.Schema({
  },
 });
 
-// Add pre hook on update
-RentSchema.post('findOneAndUpdate', async function () {
- // Get updated doc
- const updatedDoc = await this.model.findOne(this.getQuery());
- console.log(updatedDoc); // The document that `findOneAndUpdate()` will modify
-
- // Check if isOverdue changed to true
- if (updatedDoc.isOverdue === true) {
-  // Call overdueEvent
-  await overdueEvent(updatedDoc);
- }
-
- // next();
-});
-
 export default mongoose.model('Rents', RentSchema);
