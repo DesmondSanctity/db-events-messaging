@@ -1,43 +1,27 @@
-const paginate = (Model, options) => {
- const page = options.page || 1;
- const perPage = options.perPage || 20;
- const where = options.where || {};
- const include = options.include || [];
- const order = options.order || [];
-
- const offset = (page - 1) * perPage;
-
- const paginateOptions = {
-  where,
-  include,
-  limit: perPage,
-  offset,
-  order,
- };
-
- return Model.findAndCountAll(paginateOptions).then((result) => {
-  const pageCount = Math.ceil(result.count / perPage);
-  return {
-   rows: result.rows,
-   total: result.count,
-   page,
-   perPage,
-   pageCount,
-  };
- });
-};
-
+// Pagination helper
 export const getPagination = async (Model, options) => {
- return paginate(Model, options).then((paginateResult) => {
-  const totalPages = paginateResult.pageCount;
-  const currentPage = paginateResult.page;
-  const hasNextPage = currentPage < totalPages;
-  const hasPrevPage = currentPage > 1;
+ const page = options.page || 1;
+ const limit = options.limit || 20;
 
-  return {
-   ...paginateResult,
-   hasNextPage,
-   hasPrevPage,
-  };
- });
+ const query = Model.find(options.where)
+  .select(options.select)
+  .sort(options.sort)
+  .populate(options.populate)
+  .limit(limit)
+  .skip((page - 1) * limit)
+  .exec();
+
+ const docs = await query;
+
+ const totalDocs = await Model.countDocuments(options.where);
+
+ const totalPages = Math.ceil(totalDocs / limit);
+
+ return {
+  results: docs,
+  page,
+  limit,
+  totalPages,
+  totalDocs,
+ };
 };

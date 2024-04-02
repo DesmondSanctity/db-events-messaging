@@ -1,10 +1,13 @@
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
+import connect from './config/db.config.js';
 import { port } from '../src/config/app.config.js';
 import { AppError } from '../src/utils/response-handler.js';
-import '../src/models/index.js';
-
+import bookRouter from './routes/book.js';
+import rentRouter from './routes/rent.js';
+import authRouter from './routes/auth.js';
+import userRouter from './routes/user.js';
 
 async function startServer() {
  const app = express();
@@ -40,14 +43,28 @@ async function startServer() {
   res.status(201).json('Home GET Request');
  });
 
+ app.use('/api/v1/auth', authRouter);
+  app.use('/api/v1/users', userRouter);
+  app.use('/api/v1/books', bookRouter);
+  app.use('/api/v1/rents', rentRouter);
 
-
- server.listen(port, () => {
-  console.info(`
+ /** start server only when we have valid connection */
+ connect()
+  .then(() => {
+   try {
+    server.listen(port, () => {
+     console.info(`
       ###########################################
-      Server is currently running at port ${port}
+      Server is currently running at http://localhost:${port}
       ###########################################`);
- });
+    });
+   } catch (error) {
+    console.log('Cannot connect to the server');
+   }
+  })
+  .catch((error) => {
+   console.log('Invalid database connection...!');
+  });
 }
 
 startServer();

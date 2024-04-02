@@ -1,52 +1,39 @@
-import { Sequelize } from 'sequelize';
-import db from '../config/db.config.js';
+import mongoose from 'mongoose';
 
-const { DataTypes } = Sequelize;
+const Schema = mongoose.Schema;
 
-const Users = db.define(
- 'users',
- {
-  userId: {
-   type: DataTypes.UUID,
-   defaultValue: DataTypes.UUIDV4,
-   primaryKey: true,
-   allowNull: false,
-  },
-  email: {
-   type: DataTypes.STRING,
-   allowNull: true,
-  },
-  phoneNumber: {
-   type: DataTypes.STRING,
-   allowNull: true,
-  },
-  password: {
-   type: DataTypes.STRING,
-   allowNull: true,
-  },
-  fullName: {
-   type: DataTypes.STRING,
-   allowNull: true,
-  },
-  userType: {
-   type: DataTypes.ENUM('author', 'reader'),
-   allowNull: true,
-   defaultValue: 'reader',
-  },
-  isVerified: {
-   type: DataTypes.BOOLEAN,
-   allowNull: true,
-  },
+export const UserSchema = new mongoose.Schema({
+ email: {
+  type: String,
+  required: [true, 'Please provide unique email'],
+  unique: [true, 'email Exist'],
  },
+ password: {
+  type: String,
+  required: [true, 'Please provide a password'],
+  unique: false,
+ },
+ phoneNumber: {
+  type: String,
+  required: [true, 'Please provide a unique phoneNumber'],
+  unique: [true, 'phone number Exist'],
+ },
+ fullName: {
+  type: String,
+  unique: false,
+ },
+ userType: {
+  type: String,
+  enum: ['author', 'reader'],
+  default: 'reader',
+  unique: false,
+ },
+ isVerified: {
+  type: Boolean,
+  default: false,
+ },
+ books: [{ type: Schema.Types.ObjectId, ref: 'Books' }],
+ rents: [{ type: Schema.Types.ObjectId, ref: 'Rents' }],
+});
 
- {
-  freezeTableName: true,
-  scopes: {
-   withoutSensitiveInfo: {
-    attributes: { exclude: ['password', 'phoneNumber'] },
-   },
-  },
- }
-);
-
-export default Users;
+export default mongoose.model('Users', UserSchema);

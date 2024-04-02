@@ -1,38 +1,32 @@
-import { Sequelize } from 'sequelize';
-import db from '../config/db.config.js';
+import mongoose from 'mongoose';
 
-const { DataTypes } = Sequelize;
+const Schema = mongoose.Schema;
 
-const Books = db.define(
- 'books',
- {
-  bookId: {
-   type: DataTypes.UUID,
-   defaultValue: DataTypes.UUIDV4,
-   primaryKey: true,
-   allowNull: false,
-  },
-  title: {
-   type: DataTypes.STRING,
-   allowNull: true,
-  },
-  category: {
-   type: DataTypes.STRING,
-   allowNull: true,
-  },
-  coverImageURL: {
-   type: DataTypes.STRING,
-   allowNull: true,
-  },
-  isbnNumber: {
-   type: DataTypes.STRING,
-   allowNull: true,
-  },
+export const BookSchema = new mongoose.Schema({
+ title: {
+  type: String,
+  required: [true, 'Please provide a title for the book'],
  },
+ category: {
+  type: String,
+  required: [true, 'Please provide a category for the book'],
+ },
+ coverImageUrl: {
+  type: String,
+  unique: false,
+ },
+ isbnNumber: {
+  type: String,
+  required: [true, 'book record should have an isbn number'],
+ },
+ author: {
+  type: Schema.Types.ObjectId,
+  ref: 'Users',
+  required: [true, 'book record should have an author'],
+ },
+});
 
- {
-  freezeTableName: true,
- }
-);
 
-export default Books;
+
+export default mongoose.model('Books', BookSchema);
+

@@ -4,17 +4,17 @@ import { AppError } from '../utils/response-handler.js';
 
 export const getUsers = async (req, res, next) => {
  try {
-  const results = getPagination(Users, {
+  const results = await getPagination(Users, {
    ...req.query,
-   attributes: { exclude: ['password'] },
+   select: '-password', // exclude password
    where: {},
-   order: [],
+   sort: { createdAt: -1 }, // sort order
   });
 
   if (results) {
    return results;
   } else {
-   throw new AppError('failed', 'Failed to get users record', 400);
+   throw new AppError('failed', 'Failed to get users', 400);
   }
  } catch (error) {
   res.status(400).json({
@@ -27,19 +27,15 @@ export const getUsers = async (req, res, next) => {
 export const getUser = async (req, res) => {
  try {
   if (req.user && req.params.id) {
-   const user = await Users.findOne({
-    where: {
-     userId: req.params.id,
-    },
-   });
+   const user = await Users.findById(req.params.id).select('-password');
 
    if (user) {
     return user;
    } else {
-    throw new AppError('failed', 'Failed to get your record, refresh!', 400);
+    throw new AppError('failed', 'Failed to get user', 400);
    }
   } else {
-   throw new AppError('failed', 'Invalid user! Try logging in again', 400);
+   throw new AppError('failed', 'Invalid user', 400);
   }
  } catch (error) {
   res.status(400).json({
@@ -52,19 +48,18 @@ export const getUser = async (req, res) => {
 export const updateUser = async (req, res) => {
  try {
   if (req.user && req.user.userId == req.params.id) {
-   const user = await Users.update(req.body, {
-    where: {
-     userId: req.body.userId,
-    },
+   const user = await Users.findOneAndUpdate({_id: req.params.id}, req.body, {
+    new: true,
+    select: '-password',
    });
 
    if (user) {
     return user;
    } else {
-    throw new AppError('failed', 'Failed to update your record, refresh!', 400);
+    throw new AppError('failed', 'Failed to update user', 400);
    }
   } else {
-   throw new AppError('failed', 'Invalid user! Try logging in again', 400);
+   throw new AppError('failed', 'Invalid user', 400);
   }
  } catch (error) {
   res.status(400).json({
@@ -77,19 +72,15 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
  try {
   if (req.user && req.params.id) {
-   const user = await Users.destroy({
-    where: {
-     userId: req.params.id,
-    },
-   });
+   const user = await Users.findOneAndDelete({_id: req.params.id});
 
    if (user) {
     return user;
    } else {
-    throw new AppError('failed', 'Failed to delete your record, refresh!', 400);
+    throw new AppError('failed', 'Failed to delete user', 400);
    }
   } else {
-   throw new AppError('failed', 'Invalid user! Try logging in again', 400);
+   throw new AppError('failed', 'Invalid user', 400);
   }
  } catch (error) {
   res.status(400).json({

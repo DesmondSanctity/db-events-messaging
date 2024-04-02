@@ -20,6 +20,7 @@ export const Auth = async (req, res, next) => {
   }
 
   req.user = decodedToken;
+  console.log(req.user);
 
   next();
  } catch (error) {

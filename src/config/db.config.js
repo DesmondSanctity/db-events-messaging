@@ -1,15 +1,10 @@
-import { Sequelize } from 'sequelize';
-import {
- dbName,
- dbPassword,
- dbUsername,
- dbHost,
-} from '../config/app.config.js';
+import mongoose from 'mongoose';
 
-const db = new Sequelize(dbName, dbUsername, dbPassword, {
-  host: dbHost,
-  dialect: "mysql",
-  timezone: "+01:00",
-});
+const connect = async () => {
+ mongoose.set('strictQuery', true);
+ const db = await mongoose.connect(process.env.DB_URL);
+ console.log('Database Connected');
+ return db;
+}
 
-export default db;
+export default connect;

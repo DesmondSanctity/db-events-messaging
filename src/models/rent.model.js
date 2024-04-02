@@ -1,40 +1,50 @@
-import { Sequelize } from 'sequelize';
-import db from '../config/db.config.js';
+import mongoose, { Schema } from 'mongoose';
 import { overdueEvent } from '../events/overdue.js';
 
-const { DataTypes } = Sequelize;
-
-const Rents = db.define(
- 'rents',
- {
-  rentId: {
-   type: DataTypes.UUID,
-   defaultValue: DataTypes.UUIDV4,
-   primaryKey: true,
-   allowNull: false,
-  },
-  rentDate: {
-   type: DataTypes.DATE,
-   allowNull: true,
-  },
-  returnDate: {
-   type: DataTypes.DATE,
-   allowNull: true,
-  },
-  isOverdue: {
-   type: DataTypes.BOOLEAN,
-   allowNull: true,
-  },
+const RentSchema = new mongoose.Schema({
+ rentDate: {
+  type: Date,
+  required: [true, 'Please provide a rent date'],
  },
-
- {
-  freezeTableName: true,
- }
-);
-
-// After update hook for notification logic
-Rents.afterUpdate(async (updatedRent) => {
- await overdueEvent(updatedRent);
+ returnDate: {
+  type: Date,
+  required: [true, 'Please provide a return date for the rentage'],
+ },
+ isOverdue: {
+  type: Boolean,
+  default: false,
+  unique: false,
+ },
+ book: {
+  type: Schema.Types.ObjectId,
+  ref: 'Books',
+  required: [true, 'rent record should have a book'],
+ },
+ author: {
+  type: Schema.Types.ObjectId,
+  ref: 'Users',
+  required: [true, 'rent record should have an author'],
+ },
+ borrower: {
+  type: Schema.Types.ObjectId,
+  ref: 'Users',
+  required: [true, 'rent record should have a borrower'],
+ },
 });
 
-export default Rents;
+// Add pre hook on update
+RentSchema.post('findOneAndUpdate', async function () {
+ // Get updated doc
+ const updatedDoc = await this.model.findOne(this.getQuery());
+ console.log(updatedDoc); // The document that `findOneAndUpdate()` will modify
+
+ // Check if isOverdue changed to true
+ if (updatedDoc.isOverdue === true) {
+  // Call overdueEvent
+  await overdueEvent(updatedDoc);
+ }
+
+ // next();
+});
+
+export default mongoose.model('Rents', RentSchema);
