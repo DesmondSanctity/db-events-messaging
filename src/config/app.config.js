@@ -2,10 +2,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const baseURL =
- process.env.NODE_ENV == 'production'
-  ? process.env.BASE_URL_PROD
-  : process.env.BASE_URL_LOCAL;
+const baseURL = process.env.BASE_URL;
 const port = process.env.APP_PORT;
 const jwtSecret = process.env.JWT_SECRET;
 const jwtExpires = process.env.JWT_EXPIRES;
