@@ -3,7 +3,7 @@ import http from 'http';
 import cors from 'cors';
 import connect from './config/db.config.js';
 import { port } from '../src/config/app.config.js';
-import { AppError } from '../src/utils/response-handler.js';
+import { errorHandler } from '../src/utils/response-handler.js';
 import '../src/utils/cron.js';
 import bookRouter from './routes/book.js';
 import rentRouter from './routes/rent.js';
@@ -18,23 +18,6 @@ async function startServer() {
 
  app.use(express.json());
  app.disable('x-powered-by'); // less hackers know about our stack
-
- // Your middleware function to handle errors
- const errorHandler = (err, req, res, next) => {
-  if (res.headersSent) {
-   return next(err);
-  }
-
-  if (err instanceof AppError) {
-   // If it's a CustomError, respond with the custom status code and message
-   return res
-    .status(err.statusCode)
-    .json({ status: err.status, error: err.message });
-  } else {
-   // If it's an unknown error, respond with a 500 status code and a generic error message
-   return res.status(500).json({ error: 'Something went wrong.' });
-  }
- };
 
  // Applying the error handling middleware
  app.use(errorHandler);
