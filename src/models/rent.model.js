@@ -1,5 +1,4 @@
 import mongoose, { Schema } from 'mongoose';
-import { overdueEvent } from '../events/overdue.js';
 
 const RentSchema = new mongoose.Schema({
  rentDate: {
