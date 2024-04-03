@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { overdueEvent } from '../events/overdue.js';
+import { Rents } from './index.js';
 
 const RentSchema = new mongoose.Schema({
  rentDate: {
@@ -33,18 +34,15 @@ const RentSchema = new mongoose.Schema({
 });
 
 // Add pre hook on update
-RentSchema.post('findOneAndUpdate', async function () {
+RentSchema.post('save', async function () {
  // Get updated doc
- const updatedDoc = await this.model.findOne(this.getQuery());
- console.log(updatedDoc); // The document that `findOneAndUpdate()` will modify
+ const updatedDoc = await Rents.findById(this._id);
 
  // Check if isOverdue changed to true
  if (updatedDoc.isOverdue === true) {
   // Call overdueEvent
   await overdueEvent(updatedDoc);
  }
-
- // next();
 });
 
 export default mongoose.model('Rents', RentSchema);

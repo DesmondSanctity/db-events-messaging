@@ -4,6 +4,7 @@ import cors from 'cors';
 import connect from './config/db.config.js';
 import { port } from '../src/config/app.config.js';
 import { AppError } from '../src/utils/response-handler.js';
+import '../src/utils/cron.js';
 import bookRouter from './routes/book.js';
 import rentRouter from './routes/rent.js';
 import authRouter from './routes/auth.js';

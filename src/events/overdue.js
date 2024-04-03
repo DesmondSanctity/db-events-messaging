@@ -1,7 +1,7 @@
 import { Users, Books } from '../models/index.js';
+import { twilioPhoneNumber } from '../config/app.config.js';
 
 export const overdueEvent = async (updatedRent) => {
- console.log('overdue event triggered', updatedRent);
  // Check if isOverdue was updated to true
  if (updatedRent.isOverdue === true) {
   //get the borrower phone number
@@ -18,8 +18,8 @@ export const overdueEvent = async (updatedRent) => {
     body: JSON.stringify({
      rentId: updatedRent._id,
      notificationMessage: notificationMessage,
-     To: 'whatsapp:+2349059391242',
-     From: 'whatsapp:+14155238886',
+     To: `whatsapp:${user.phoneNumber}`,
+     From: `whatsapp:${twilioPhoneNumber}`,
      mediaUrl: book.coverImageUrl,
     }), // Send event data in request body
    });
@@ -29,7 +29,7 @@ export const overdueEvent = async (updatedRent) => {
      'Twilio notification request successful:',
      await response.text()
     );
-    return updatedRent;
+    // return updatedRent;
    } else {
     console.error(
      'Error sending Twilio notification request:',
