@@ -24,3 +24,20 @@ export class AppResponse {
   });
  }
 }
+
+ // Your middleware function to handle errors
+ export const errorHandler = (err, req, res, next) => {
+  if (res.headersSent) {
+   return next(err);
+  }
+
+  if (err instanceof AppError) {
+   // If it's a CustomError, respond with the custom status code and message
+   return res
+    .status(err.statusCode)
+    .json({ status: err.status, error: err.message });
+  } else {
+   // If it's an unknown error, respond with a 500 status code and a generic error message
+   return res.status(500).json({ error: 'Something went wrong.' });
+  }
+ };
