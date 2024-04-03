@@ -28,9 +28,9 @@ async function startServer() {
  });
 
  app.use('/api/v1/auth', authRouter);
-  app.use('/api/v1/users', userRouter);
-  app.use('/api/v1/books', bookRouter);
-  app.use('/api/v1/rents', rentRouter);
+ app.use('/api/v1/users', userRouter);
+ app.use('/api/v1/books', bookRouter);
+ app.use('/api/v1/rents', rentRouter);
 
  /** start server only when we have valid connection */
  connect()
@@ -43,11 +43,11 @@ async function startServer() {
       ###########################################`);
     });
    } catch (error) {
-    console.log('Cannot connect to the server');
+    console.log('Cannot connect to the server', error);
    }
   })
   .catch((error) => {
-   console.log('Invalid database connection...!');
+   console.log('Invalid database connection...!', error);
   });
 }
 
